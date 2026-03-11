@@ -17,3 +17,8 @@ variable "common_tags" {
 variable "zone_name" {
   default = "daws78s.online"
 }
+
+variable "Password" {
+  default = "ExpenseApp1"
+  type = string
+}

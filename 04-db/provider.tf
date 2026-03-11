@@ -6,10 +6,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "daws78s-remote-state"
+    bucket = "terraform-remote-stater"
     key    = "expense-dev-db"
     region = "us-east-1"
-    dynamodb_table = "daws78s-locking"
+    dynamodb_table = "dynamo-locking"
   }
 }
 

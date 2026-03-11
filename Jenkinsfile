@@ -1,79 +1,50 @@
 pipeline {
     agent {
-        label 'AGENT-1'
+       label 'AGENT-1' 
     }
     options {
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 1, unit: 'HOURS') 
         disableConcurrentBuilds()
-        ansiColor('xterm')
     }
-    parameters {
-        choice(name: 'action', choices: ['Apply', 'Destroy'], description: 'Pick something')
+
+    environment { 
+        Name = 'Rabbani'
     }
+
     stages {
         stage('Init') {
             steps {
-               sh """
-                cd 01-vpc
-                terraform init -reconfigure
-               """
+                sh """
+                    ls -ltr
+                """
             }
         }
-        stage('Plan') {
-            when {
-                expression{
-                    params.action == 'Apply'
-                }
-            }
+        stage('Test') {
             steps {
-                sh """
-                cd 01-vpc
-                terraform plan
-                """
+                sh 'echo this is test'
+                sh 'sleep 10'
             }
         }
         stage('Deploy') {
-            when {
-                expression{
-                    params.action == 'Apply'
-                }
-            }
-            input {
-                message "Should we continue?"
-                ok "Yes, we should."
-            }
             steps {
-                sh """
-                cd 01-vpc
-                terraform apply -auto-approve
-                """
+                sh 'echo this is deploy'
             }
         }
-
-        stage('Destroy') {
-            when {
-                expression{
-                    params.action == 'Destroy'
-                }
-            }
+        stage('Trigger') {
             steps {
-                sh """
-                cd 01-vpc
-                terraform destroy -auto-approve
-                """
+                sh 'echo this is triger'
             }
         }
     }
-    post { 
-        always { 
-            echo 'I will always say Hello again!'
-            deleteDir()
+    post {
+        always{
+            sh 'echo this job run always'
         }
-        success { 
-            echo 'I will run when pipeline is success'
+        success {
+            sh 'echo this is only job is success'
         }
-        failure { 
-            echo 'I will run when pipeline is failure'
+        failure {
+            sh 'echo this is only failure'
         }
     }
 }
