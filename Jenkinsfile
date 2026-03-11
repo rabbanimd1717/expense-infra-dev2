@@ -24,12 +24,21 @@ pipeline {
         }
         stage('Plan') {
             steps {
-                sh 'echo this is test'
+                sh """
+                    cd 01-vpc
+                    ls -ltr
+                """
             }
         }
-        stage('Apply') {
+        stage('Deploy') {
             steps {
-                sh 'echo this is deploy'
+                input{
+                    message "Should we continue?"
+                    ok "Yes, we should."
+                }
+                sh """
+                    cd 01-vpc
+                """
             }
         }
     }
