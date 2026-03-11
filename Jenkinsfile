@@ -33,16 +33,16 @@ pipeline {
             }
         }
     }
-    post {
-        always{
-            sh 'echo this job run always'
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
             deleteDir()
         }
-        success {
-            sh 'echo this is only job is success'
+        success { 
+            echo 'I will run when pipeline is success'
         }
-        failure {
-            sh 'echo this is only failure'
+        failure { 
+            echo 'I will run when pipeline is failure'
         }
     }
 }
