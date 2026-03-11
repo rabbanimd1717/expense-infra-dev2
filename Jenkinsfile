@@ -85,11 +85,6 @@ pipeline {
         failure { 
             echo 'I will run when pipeline is failure'
         }
-        apply {
-            echo 'only runs when apply'
-        }
-        destroy {
-            echo 'only runs when destroy'
-        }
+       
     }
 }
