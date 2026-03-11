@@ -8,6 +8,13 @@ pipeline {
         ansiColor('xterm')
     }
 
+    parameters {
+        
+
+        choice(name: 'ACTION', choices: ['Apply', 'Destroy'], description: 'Pick something')
+
+    }
+
     environment { 
         Name = 'Rabbani'
     }
@@ -23,14 +30,23 @@ pipeline {
             }
         }
         stage('Plan') {
+            when {
+                expression {
+                    params.ACTION == 'Apply'
+                }
+            }
             steps {
                 sh """
                     cd 01-vpc
-                    ls -ltr
+                    terraform plan
                 """
             }
         }
         stage('Deploy') {
+            when {
+                expression {
+                    params.ACTION == 'Apply'
+                }
             input{
                     message "Should we continue?"
                     ok "Yes, we should."
@@ -39,6 +55,21 @@ pipeline {
                 
                 sh """
                     cd 01-vpc
+                    terraform apply -auto-approve
+                """
+            }
+        }
+        stage('Destroy') {
+            when {
+                expression {
+                    params.ACTION == 'Destroy'
+                }
+           
+            steps {
+                
+                sh """
+                    cd 01-vpc
+                    terraform destroy -auto-approve
                 """
             }
         }
@@ -53,6 +84,12 @@ pipeline {
         }
         failure { 
             echo 'I will run when pipeline is failure'
+        }
+        apply {
+            echo 'only runs when apply'
+        }
+        destroy {
+            echo 'only runs when destroy'
         }
     }
 }
