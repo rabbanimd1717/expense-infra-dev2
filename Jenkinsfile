@@ -5,6 +5,7 @@ pipeline {
     options {
         timeout(time: 1, unit: 'HOURS') 
         disableConcurrentBuilds()
+        ansiColor('xterm')
     }
 
     environment { 
@@ -16,29 +17,26 @@ pipeline {
             steps {
                 sh """
                     ls -ltr
+                    cd 01-vpc
+                    terraform init -reconfigure
                 """
             }
         }
-        stage('Test') {
+        stage('Plan') {
             steps {
                 sh 'echo this is test'
-                sh 'sleep 10'
             }
         }
-        stage('Deploy') {
+        stage('Apply') {
             steps {
                 sh 'echo this is deploy'
-            }
-        }
-        stage('Trigger') {
-            steps {
-                sh 'echo this is triger'
             }
         }
     }
     post {
         always{
             sh 'echo this job run always'
+            #deleteDir()
         }
         success {
             sh 'echo this is only job is success'
